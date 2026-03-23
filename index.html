@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>恋愛ゲーム：文花と勇斗</title>
+    <link rel="stylesheet" href="src/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- フルスクリーン背景 -->
+        <div id="background-layer"></div>
+
+        <!-- ブラックアウト演出用スクリーン -->
+        <div id="blackout-screen" class="hidden"></div>
+
+        <!-- シーン切り替え時のアイキャッチ -->
+        <div id="transition-screen" class="hidden">
+            <h2 id="transition-title"></h2>
+        </div>
+
+        <!-- ヘッダーUI（親密度バーなど） -->
+        <div id="ui-top">
+            <div class="intimacy-container">
+                <span class="heart-icon">💖</span>
+                <div class="progress-bar">
+                    <div id="intimacy-fill"></div>
+                </div>
+                <span id="intimacy-text">親密度: 0%</span>
+            </div>
+            <div id="scene-title-container">
+                <span id="scene-title">エピソードタイトル</span>
+            </div>
+        </div>
+
+        <!-- キャラクタースプライト -->
+        <div id="character-layer">
+            <div id="character-placeholder" class="hidden">ここに追加する画像（例：ayaka_happy.png）が設定されます</div>
+            <img id="character-sprite" class="sprite-hidden" src="" alt="キャラクター">
+        </div>
+
+        <!-- 選択肢レイヤー -->
+        <div id="choices-container" class="hidden">
+            <!-- JSで動的に追加されます -->
+        </div>
+
+        <!-- 会話ウィンドウレイヤー -->
+        <div id="dialogue-container" class="hidden">
+            <div id="speaker-name">話者名</div>
+            <div id="dialogue-box">
+                <span id="dialogue-text"></span>
+                <span id="next-indicator">▼</span>
+            </div>
+        </div>
+
+        <!-- タイトル画面 / フェード用カバーレイヤー -->
+        <div id="screen-cover">
+            <h1 class="main-title">文花と勇斗の物語</h1>
+            <p class="subtitle">〜二人で創る未来〜</p>
+            <button id="start-button">ゲームをはじめる</button>
+        </div>
+    </div>
+
+    <!-- ストーリー用データを別ファイルで定義 -->
+    <script src="src/storyData.js"></script>
+    <script src="src/script.js"></script>
+</body>
+
+</html>

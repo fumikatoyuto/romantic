@@ -1,0 +1,428 @@
+:root {
+    --primary-color: #ffb7c5;
+    /* 桜色 */
+    --secondary-color: #ff6b81;
+    --text-color: #333333;
+    --bg-dark: rgba(0, 0, 0, 0.6);
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.5);
+    --font-main: 'Shippori Mincho', serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+
+body {
+    background-color: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    font-family: var(--font-main);
+}
+
+#game-container {
+    position: relative;
+    width: 100%;
+    max-width: 1280px;
+    height: 100vh;
+    max-height: 720px;
+    background-color: #000;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+    aspect-ratio: 16/9;
+}
+
+#background-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    transition: background-image 1s ease-in-out;
+}
+
+/* 上部UI（親密度バーなど） */
+#ui-top {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+}
+
+.intimacy-container {
+    display: flex;
+    align-items: center;
+    background: var(--bg-dark);
+    padding: 10px 20px;
+    border-radius: 30px;
+    backdrop-filter: blur(5px);
+    border: 1px solid var(--glass-border);
+    gap: 10px;
+    color: white;
+}
+
+.heart-icon {
+    font-size: 1.5rem;
+    animation: heartbeat 2s infinite;
+}
+
+@keyframes heartbeat {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.progress-bar {
+    width: 200px;
+    height: 12px;
+    background-color: #333;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+#intimacy-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+    transition: width 0.8s ease-out, background 1s ease;
+}
+
+#intimacy-fill.lovers-pink {
+    background: linear-gradient(90deg, #ff0844 0%, #ffb199 100%);
+    box-shadow: 0 0 10px #ff0844;
+}
+
+#intimacy-text {
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+#scene-title-container {
+    background: var(--bg-dark);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    backdrop-filter: blur(5px);
+}
+
+/* タイトル画面カバー */
+#screen-cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.75);
+    background-blend-mode: overlay;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    transition: opacity 1s ease;
+    color: white;
+}
+
+#screen-cover.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.main-title {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px rgba(255, 183, 197, 0.8);
+}
+
+.subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 50px;
+    color: var(--primary-color);
+}
+
+#start-button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 1.5rem;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+    font-family: var(--font-main);
+    box-shadow: 0 4px 15px rgba(255, 107, 129, 0.4);
+}
+
+#start-button:hover {
+    transform: scale(1.05);
+    background: var(--secondary-color);
+}
+
+/* キャラクター立ち絵レイヤー */
+#character-layer {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    /* ダイアログへのクリックを貫通させる */
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    z-index: 15;
+    /* 背景より上で、ダイアログより下のレイヤー */
+}
+
+#character-sprite {
+    max-height: 75%;
+    max-width: 90%;
+    object-fit: contain;
+    transition: opacity 0.3s ease;
+    margin-bottom: 150px;
+    /* メッセージウィンドウと被らないように上にずらす */
+}
+
+.sprite-hidden {
+    opacity: 0;
+}
+
+#character-placeholder {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: #ffb7c5;
+    padding: 20px;
+    border: 2px dashed #ffb7c5;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    text-align: center;
+    white-space: pre-wrap;
+    box-shadow: 0 0 15px rgba(255, 183, 197, 0.5);
+    pointer-events: none;
+}
+
+/* 会話ウィンドウレイヤー */
+#dialogue-container {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 1000px;
+    z-index: 20;
+    transition: opacity 0.3s;
+}
+
+#dialogue-container.hidden {
+    display: none;
+}
+
+#speaker-name {
+    display: inline-block;
+    background: var(--bg-dark);
+    color: white;
+    padding: 5px 20px;
+    border-radius: 8px 8px 0 0;
+    font-size: 1.3rem;
+    font-weight: bold;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: none;
+    margin-left: 20px;
+}
+
+#dialogue-box {
+    background: var(--bg-dark);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 30px;
+    color: white;
+    font-size: 1.5rem;
+    min-height: 160px;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    line-height: 1.6;
+}
+
+#next-indicator {
+    position: absolute;
+    bottom: 20px;
+    right: 30px;
+    font-size: 1.2rem;
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(5px);
+    }
+}
+
+/* 選択肢レイヤー */
+#choices-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(3px);
+    z-index: 30;
+    gap: 20px;
+}
+
+#choices-container.hidden {
+    display: none;
+}
+
+.choice-btn {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid var(--primary-color);
+    color: var(--text-color);
+    padding: 15px 40px;
+    font-size: 1.3rem;
+    border-radius: 30px;
+    width: 60%;
+    max-width: 600px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: var(--font-main);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.choice-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 183, 197, 0.5);
+}
+
+.fade-in {
+    animation: fadeIn 1s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ブラックアウト演出用 */
+#blackout-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease;
+}
+
+#blackout-screen.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* シーン切り替え時のアイキャッチ・トランジション画面 */
+#transition-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.4);
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: overlay;
+    z-index: 50;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease;
+}
+
+#transition-screen.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+#transition-title {
+    color: white;
+    font-size: 3.5rem;
+    text-shadow: 0 0 15px rgba(255, 183, 197, 0.8), 0 0 5px rgba(0, 0, 0, 1);
+    letter-spacing: 0.15em;
+    font-family: var(--font-main);
+    animation: zoomInOut 3s ease forwards;
+}
+
+@keyframes zoomInOut {
+    0% {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1.05);
+        opacity: 0;
+    }
+}
