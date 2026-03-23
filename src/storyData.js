@@ -371,7 +371,7 @@ const GAME_STORY_DATA = [
         id: "scene17_lithuania",
         title: "リトアニア",
         background: "assets/images/lithuania.jpeg",
-        transitionImage: "assets/images/11.jpeg",
+        transitionImage: "assets/images/11.webp",
         dialogues: [
             { speaker: "勇斗 (自分)", text: "ついに１年の留学が始まったね", emotion: "happy" },
             { speaker: "文花", text: "そうだね…でも私たちなら大丈夫", emotion: "happy" },
